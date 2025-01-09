@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
+    "type-check": "tsc --noEmit",
+    "build-with-types": "npm run type-check && npm run build",
     "preview": "vite preview",
     "test.e2e": "cypress run",
     "test.unit": "vitest",
