@@ -1,0 +1,7 @@
+{
+  "name": "discreet-luck",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
