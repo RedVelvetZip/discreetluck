@@ -23,6 +23,35 @@ export const fetchMarket = async (conditionId: string = "") => {
 };
 
 /**
+ * Fetch details for a specific token.
+ * @param tokenId The ID of the token.
+ * @returns The token data.
+ *
+ */
+export async function fetchTokenDetails(tokenId: string) {
+  try {
+    const buyResponse = await fetch(
+      `https://clob.polymarket.com/price?token_id=${tokenId}&side=buy`
+    );
+    const buyPrice = await buyResponse.json();
+
+    const sellResponse = await fetch(
+      `https://clob.polymarket.com/price?token_id=${tokenId}&side=sell`
+    );
+    const sellPrice = await sellResponse.json();
+
+    return {
+      tokenId,
+      buyPrice: buyPrice.price,
+      sellPrice: sellPrice.price,
+    };
+  } catch (error) {
+    console.error(`Error fetching details for token ${tokenId}:`, error);
+    throw error;
+  }
+}
+
+/**
  * Fetch order book data for a specific market.
  * @param marketId The ID of the market.
  * @returns The order book data.
