@@ -2,7 +2,7 @@ import { fetcher } from "@/utils/fetcher";
 import { Side } from "@polymarket/clob-client";
 
 // Config
-import clobClient from "../config/clobConfig";
+import { clobClient } from "../config/clobConfig";
 
 /**
  * Fetch order book data for a specific market.

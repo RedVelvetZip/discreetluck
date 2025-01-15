@@ -23,6 +23,7 @@ import {
   normalizeTradesForChart,
   filterTradesByMarket,
 } from "./data/mockTrades";
+import OrderManager from "./components/polymarket/OrderManager";
 
 // Mock Data
 const btcOrderBookData = getCombinedOrderBookData("BTC-USD");
@@ -184,6 +185,7 @@ export default function MarketPage() {
           </Box>
         </Grid>
       </Grid>
+      <OrderManager />
     </main>
   );
 }
