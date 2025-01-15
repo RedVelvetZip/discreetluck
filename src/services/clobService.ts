@@ -5,6 +5,24 @@ import { Side } from "@polymarket/clob-client";
 import { clobClient } from "../config/clobConfig";
 
 /**
+ * Fetch details for a specific market.
+ * @param conditionId The ID of the market.
+ * @returns The market data.
+ */
+export const fetchMarket = async (conditionId: string = "") => {
+  const response = await fetch(
+    `https://clob.polymarket.com/markets/${conditionId}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch market");
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+/**
  * Fetch order book data for a specific market.
  * @param marketId The ID of the market.
  * @returns The order book data.
