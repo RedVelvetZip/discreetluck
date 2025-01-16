@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Button, Skeleton } from "@mui/material";
+import { Box, Typography, Button, Skeleton, Divider } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { TokenData } from "@/types/polymarket";
 
@@ -58,22 +58,30 @@ const OrderManager: React.FC<OrderManagerProps> = ({
 
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <Divider sx={{ my: 4 }} />
       <Grid container spacing={2} alignItems="center">
         <Grid size={{ xs: 6, md: 4 }}>
-          <Typography variant="h4" gutterBottom>
-            {heading}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            {subHeading}
-          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <Typography variant="h4">{heading}</Typography>
+            <Typography variant="subtitle1">{subHeading}</Typography>
+          </Box>
         </Grid>
         <Grid
           size={{ xs: 6, md: 2 }}
           sx={{
             textAlign: { xs: "right", md: "center" },
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h4">
             {Math.round(token[0]?.price * 100)}%
           </Typography>
         </Grid>
@@ -82,7 +90,6 @@ const OrderManager: React.FC<OrderManagerProps> = ({
             sx={{
               display: "flex",
               gap: 2,
-              mb: 2,
             }}
           >
             {token.map((t) => (
@@ -100,6 +107,7 @@ const OrderManager: React.FC<OrderManagerProps> = ({
           </Box>
         </Grid>
       </Grid>
+      <Divider sx={{ my: 4 }} />
     </Box>
   );
 };

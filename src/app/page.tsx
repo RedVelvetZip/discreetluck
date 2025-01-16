@@ -11,6 +11,13 @@ import { MarketResponse, TokenData } from "@/types/polymarket";
 
 // Components
 import OrderManager from "./components/polymarket/OrderManager";
+import LineChart from "./components/charts/LineChart";
+
+// Mock Data
+import { getCombinedOrderBookData } from "./data/mockOrderBookSummary";
+
+// Mock Data
+const btcOrderBookData = getCombinedOrderBookData("BTC-USD");
 
 export default function MarketPage() {
   const [marketData, setMarketData] = useState<MarketResponse | null>(null);
@@ -66,7 +73,21 @@ export default function MarketPage() {
 
       {/* Main Content Section */}
       <Box>
-        <OrderManager token={tokenData} isLoading={loading} />
+        <Box>
+          <LineChart
+            data={btcOrderBookData}
+            xAxis="price"
+            yAxis="size"
+            title="BTC-USD Order Book Summary - Mock Data"
+            color="#1976d2"
+            xAxisFormatter={(value) => `$${value}`}
+            tooltipFormatter={(value) => `${value} units`}
+            tooltipLabelFormatter={(label) => `Price: $${label}`}
+          />
+        </Box>
+        <Box sx={{ mt: 3 }}>
+          <OrderManager token={tokenData} isLoading={loading} />
+        </Box>
       </Box>
     </Box>
   );
