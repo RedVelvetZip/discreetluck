@@ -1,14 +1,17 @@
 import React from "react";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Skeleton } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { TokenData } from "@/types/polymarket";
 
 interface OrderManagerProps {
-  token: TokenData[];
+  token?: TokenData[];
+  isLoading?: boolean;
 }
 
-const OrderManager: React.FC<OrderManagerProps> = ({ token }) => {
-  // NOTE: This is a dummy data
+const OrderManager: React.FC<OrderManagerProps> = ({
+  token = [],
+  isLoading = false,
+}) => {
   const heading = "Some Heading";
   const subHeading = "Some Sub Heading";
 
@@ -19,6 +22,39 @@ const OrderManager: React.FC<OrderManagerProps> = ({ token }) => {
   const getButtonColor = (outcome: string) => {
     return outcome.toLowerCase() === "yes" ? "success" : "error";
   };
+
+  if (isLoading || !token.length) {
+    return (
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={2} alignItems="center">
+          <Grid size={{ xs: 6, md: 4 }}>
+            <Skeleton variant="text" width="80%" height={40} sx={{ mb: 1 }} />
+            <Skeleton variant="text" width="60%" height={24} />
+          </Grid>
+          <Grid
+            size={{ xs: 6, md: 2 }}
+            sx={{
+              textAlign: { xs: "right", md: "center" },
+            }}
+          >
+            <Skeleton variant="text" width="100%" height={40} />
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                mb: 2,
+              }}
+            >
+              <Skeleton variant="rectangular" width="100%" height={48} />
+              <Skeleton variant="rectangular" width="100%" height={48} />
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -38,7 +74,7 @@ const OrderManager: React.FC<OrderManagerProps> = ({ token }) => {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            {Math.round(token[0].price * 100)}%
+            {Math.round(token[0]?.price * 100)}%
           </Typography>
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>

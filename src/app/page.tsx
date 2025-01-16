@@ -66,7 +66,7 @@ export default function MarketPage() {
 
       {/* Main Content Section */}
       <Box>
-        <OrderManager token={tokenData} />
+        <OrderManager token={tokenData} isLoading={loading} />
       </Box>
     </Box>
   );
