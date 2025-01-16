@@ -15,6 +15,7 @@ import LineChart from "./components/charts/LineChart";
 
 // Mock Data
 import { getCombinedOrderBookData } from "./data/mockOrderBookSummary";
+import PageHeader from "./components/common/PageHeader";
 
 // Mock Data
 const btcOrderBookData = getCombinedOrderBookData("BTC-USD");
@@ -50,26 +51,11 @@ export default function MarketPage() {
 
   return (
     <Box>
-      {/* Header Section */}
-      <Box sx={{ display: "flex", alignItems: "center", mb: 4 }}>
-        {marketData?.icon && (
-          <Avatar
-            src={marketData.icon}
-            alt="Market Icon"
-            sx={{
-              width: 56,
-              height: 56,
-              mr: 2,
-            }}
-          />
-        )}
-
-        {marketData?.question && (
-          <Typography variant="h4" component="h1">
-            {marketData.question}
-          </Typography>
-        )}
-      </Box>
+      <PageHeader
+        icon={marketData?.icon}
+        title={marketData?.question}
+        isLoading={loading}
+      />
 
       {/* Main Content Section */}
       <Box>

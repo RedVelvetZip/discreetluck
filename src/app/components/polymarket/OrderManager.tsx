@@ -26,15 +26,27 @@ const OrderManager: React.FC<OrderManagerProps> = ({
   if (isLoading || !token.length) {
     return (
       <Box sx={{ flexGrow: 1 }}>
+        <Divider sx={{ my: 4 }} />
         <Grid container spacing={2} alignItems="center">
           <Grid size={{ xs: 6, md: 4 }}>
-            <Skeleton variant="text" width="80%" height={40} sx={{ mb: 1 }} />
-            <Skeleton variant="text" width="60%" height={24} />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
+              <Skeleton variant="text" width="80%" height={40} />
+              <Skeleton variant="text" width="60%" height={24} />
+            </Box>
           </Grid>
           <Grid
             size={{ xs: 6, md: 2 }}
             sx={{
               textAlign: { xs: "right", md: "center" },
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <Skeleton variant="text" width="100%" height={40} />
@@ -44,7 +56,6 @@ const OrderManager: React.FC<OrderManagerProps> = ({
               sx={{
                 display: "flex",
                 gap: 2,
-                mb: 2,
               }}
             >
               <Skeleton variant="rectangular" width="100%" height={48} />
@@ -52,6 +63,7 @@ const OrderManager: React.FC<OrderManagerProps> = ({
             </Box>
           </Grid>
         </Grid>
+        <Divider sx={{ my: 4 }} />
       </Box>
     );
   }
