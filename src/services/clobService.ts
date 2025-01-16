@@ -2,54 +2,58 @@ import { fetcher } from "@/utils/fetcher";
 import { Side } from "@polymarket/clob-client";
 
 // Config
-import { clobClient } from "../config/clobConfig";
+import { CLOB_API_URL, clobClient } from "../config/clobConfig";
+
+// Types
+import { MarketResponse, TokenData } from "@/types/polymarket";
 
 /**
  * Fetch details for a specific market.
  * @param conditionId The ID of the market.
  * @returns The market data.
  */
-export const fetchMarket = async (conditionId: string = "") => {
-  const response = await fetch(
-    `https://clob.polymarket.com/markets/${conditionId}`
-  );
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch market");
+export const fetchMarket = async (
+  conditionId: string
+): Promise<MarketResponse> => {
+  if (!conditionId) {
+    throw new Error("Condition ID is required to fetch market data.");
   }
 
-  const data = await response.json();
-  return data;
+  const url = `${CLOB_API_URL}/markets/${conditionId}`;
+  return fetcher<MarketResponse>(url);
 };
 
 /**
  * Fetch details for a specific token.
- * @param tokenId The ID of the token.
- * @returns The token data.
- *
+ * @param token A token object containing the base token data.
+ * @returns The enriched token details.
  */
-export async function fetchTokenDetails(tokenId: string) {
-  try {
-    const buyResponse = await fetch(
-      `https://clob.polymarket.com/price?token_id=${tokenId}&side=buy`
-    );
-    const buyPrice = await buyResponse.json();
+export const fetchTokenDetails = async (
+  token: TokenData
+): Promise<TokenData> => {
+  if (!token.token_id) {
+    throw new Error("Token ID is required to fetch token details.");
+  }
 
-    const sellResponse = await fetch(
-      `https://clob.polymarket.com/price?token_id=${tokenId}&side=sell`
-    );
-    const sellPrice = await sellResponse.json();
+  try {
+    const buyUrl = `${CLOB_API_URL}/price?token_id=${token.token_id}&side=buy`;
+
+    const buyResponse = await fetcher<{ price: number }>(buyUrl);
 
     return {
-      tokenId,
-      buyPrice: buyPrice.price,
-      sellPrice: sellPrice.price,
+      ...token,
+      buyPrice: buyResponse?.price || null,
     };
   } catch (error) {
-    console.error(`Error fetching details for token ${tokenId}:`, error);
-    throw error;
+    console.error(`Error fetching details for token ${token.token_id}:`, error);
+    throw new Error(
+      `Failed to fetch token details for tokenId: ${token.token_id}`
+    );
   }
-}
+};
+
+// =================================================================================================
+// OLD
 
 /**
  * Fetch order book data for a specific market.

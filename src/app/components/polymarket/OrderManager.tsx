@@ -1,101 +1,71 @@
-"use client";
+import React from "react";
+import { Box, Typography, Button } from "@mui/material";
+import Grid from "@mui/material/Grid2";
+import { TokenData } from "@/types/polymarket";
 
-import { useState } from "react";
+interface OrderManagerProps {
+  token: TokenData[];
+}
 
-import {
-  Container,
-  Typography,
-  Button,
-  CircularProgress,
-  Box,
-  Paper,
-} from "@mui/material";
+const OrderManager: React.FC<OrderManagerProps> = ({ token }) => {
+  // NOTE: This is a dummy data
+  const heading = "Some Heading";
+  const subHeading = "Some Sub Heading";
 
-import { OrderBookSummary } from "@polymarket/clob-client";
-import { fetchMarket, fetchTokenDetails } from "@/services/clobService";
-
-export default function OrderManager() {
-  const [market, setMarket] = useState<OrderBookSummary | null>(null);
-  const [tokens, setTokens] = useState<any[]>([]);
-  const [loadingMarket, setLoadingMarket] = useState(false);
-  const [loadingTokens, setLoadingTokens] = useState(false);
-
-  const handleFetchMarket = async () => {
-    setLoadingMarket(true);
-    try {
-      const data = await fetchMarket(
-        "0x405534c03f82e56a397478db7b068dbb683fb46c976265f650ba6510200749da"
-      );
-      setMarket(data);
-    } catch (error) {
-      console.error("Error fetching market:", error);
-    } finally {
-      setLoadingMarket(false);
-    }
+  const handleBuy = (outcome: string, tokenId: string, price: number) => {
+    console.log(`Buy ${outcome} for token ID ${tokenId} at ${price}`);
   };
 
-  const handleFetchTokenDetails = async () => {
-    if (!market || !market.tokens) return;
-
-    setLoadingTokens(true);
-    try {
-      const tokenDetails = await Promise.all(
-        market.tokens.map((token) => fetchTokenDetails(token.token_id))
-      );
-      setTokens(tokenDetails);
-    } catch (error) {
-      console.error("Error fetching token details:", error);
-    } finally {
-      setLoadingTokens(false);
-    }
+  const getButtonColor = (outcome: string) => {
+    return outcome.toLowerCase() === "yes" ? "success" : "error";
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Order Manager
-      </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleFetchMarket}
-        disabled={loadingMarket}
-        startIcon={loadingMarket && <CircularProgress size={20} />}
-        sx={{ mr: 2 }}
-      >
-        {loadingMarket ? "Loading Market..." : "Fetch Market"}
-      </Button>
-      {market && (
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleFetchTokenDetails}
-          disabled={loadingTokens}
-          startIcon={loadingTokens && <CircularProgress size={20} />}
+    <Box sx={{ flexGrow: 1 }}>
+      <Grid container spacing={2} alignItems="center">
+        <Grid size={{ xs: 6, md: 4 }}>
+          <Typography variant="h4" gutterBottom>
+            {heading}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            {subHeading}
+          </Typography>
+        </Grid>
+        <Grid
+          size={{ xs: 6, md: 2 }}
+          sx={{
+            textAlign: { xs: "right", md: "center" },
+          }}
         >
-          {loadingTokens ? "Loading Tokens..." : "Fetch Token Details"}
-        </Button>
-      )}
-      {market && (
-        <Box mt={4}>
-          <Typography variant="h6" gutterBottom>
-            Market Details
+          <Typography variant="h4" gutterBottom>
+            {Math.round(token[0].price * 100)}%
           </Typography>
-          <Paper elevation={3} sx={{ p: 2, overflow: "auto" }}>
-            <pre>{JSON.stringify(market, null, 2)}</pre>
-          </Paper>
-        </Box>
-      )}
-      {tokens.length > 0 && (
-        <Box mt={4}>
-          <Typography variant="h6" gutterBottom>
-            Token Details
-          </Typography>
-          <Paper elevation={3} sx={{ p: 2, overflow: "auto" }}>
-            <pre>{JSON.stringify(tokens, null, 2)}</pre>
-          </Paper>
-        </Box>
-      )}
-    </Container>
+        </Grid>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              mb: 2,
+            }}
+          >
+            {token.map((t) => (
+              <Button
+                key={t.token_id}
+                variant="contained"
+                size="large"
+                color={getButtonColor(t.outcome)}
+                fullWidth
+                onClick={() => handleBuy(t.outcome, t.token_id, t.price)}
+              >
+                Buy {t.outcome} {Math.round(t.price * 100)}¢
+              </Button>
+            ))}
+          </Box>
+        </Grid>
+      </Grid>
+    </Box>
   );
-}
+};
+
+export default OrderManager;
