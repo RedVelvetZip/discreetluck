@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { CssBaseline, Box, Toolbar } from "@mui/material";
 
+// Contexts
+import { NotificationProvider } from "@/contexts/NotificationContext";
+
 // Global Styles
 import "../styles/globals.css";
 
@@ -29,34 +32,33 @@ export default function RootLayout({
       </head>
       <body>
         <CssBaseline />
-        <Box
-          sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
-        >
-          {/* Header */}
-          <Header onMenuClick={toggleDrawer(true)} />
-
-          {/* Side Menu */}
-          <SideMenu
-            open={drawerOpen}
-            onClose={toggleDrawer(false)}
-            onOpen={toggleDrawer(true)}
-          />
-
-          {/* Main Content */}
+        <NotificationProvider>
           <Box
-            component="main"
             sx={{
-              flexGrow: 1,
-              p: 3,
+              display: "flex",
+              flexDirection: "column",
+              minHeight: "100vh",
             }}
           >
-            <Toolbar /> {/* Spacer for fixed AppBar */}
-            {children}
+            <Header onMenuClick={toggleDrawer(true)} />
+            <SideMenu
+              open={drawerOpen}
+              onClose={toggleDrawer(false)}
+              onOpen={toggleDrawer(true)}
+            />
+            <Box
+              component="main"
+              sx={{
+                flexGrow: 1,
+                p: 3,
+              }}
+            >
+              <Toolbar /> {/* Spacer for fixed AppBar */}
+              {children}
+            </Box>
+            <Footer />
           </Box>
-
-          {/* Footer */}
-          <Footer />
-        </Box>
+        </NotificationProvider>
       </body>
     </html>
   );

@@ -1,7 +1,12 @@
 import React from "react";
 import { Box, Typography, Button, Skeleton, Divider } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+
+// Types
 import { TokenData } from "@/types/polymarket";
+
+// Contexts
+import { useNotification } from "@/contexts/NotificationContext";
 
 interface OrderManagerProps {
   token?: TokenData[];
@@ -12,13 +17,23 @@ const OrderManager: React.FC<OrderManagerProps> = ({
   token = [],
   isLoading = false,
 }) => {
+  // Notification Context
+  const { showNotification } = useNotification();
+
+  // Constants
   const heading = "Some Heading";
   const subHeading = "Some Sub Heading";
 
+  // Handlers
   const handleBuy = (outcome: string, tokenId: string, price: number) => {
-    console.log(`Buy ${outcome} for token ID ${tokenId} at ${price}`);
+    const message = `Buy ${outcome} for token ID ${tokenId} at ${price}`;
+    console.log(message);
+
+    const notificationColor = getButtonColor(outcome);
+    showNotification(message, notificationColor);
   };
 
+  // Utils
   const getButtonColor = (outcome: string) => {
     return outcome.toLowerCase() === "yes" ? "success" : "error";
   };

@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Box, Avatar, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 // Config
 import { clobClient, DEFAULT_MARKET_ID } from "@/config/clobConfig";
 
 // Types
 import { MarketResponse, TokenData } from "@/types/polymarket";
+
+// Providers
+import { useNotification } from "@/contexts/NotificationContext";
 
 // Components
 import OrderManager from "./components/polymarket/OrderManager";
@@ -25,6 +28,8 @@ export default function MarketPage() {
   const [tokenData, setTokenData] = useState<TokenData[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { showNotification } = useNotification();
 
   // Fetch market and token details
   useEffect(() => {
@@ -48,6 +53,12 @@ export default function MarketPage() {
 
     fetchMarketAndTokenDetails();
   }, []);
+
+  useEffect(() => {
+    if (error) {
+      showNotification(error, "error");
+    }
+  }, [error, showNotification]);
 
   return (
     <Box>
